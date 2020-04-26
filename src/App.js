@@ -1,5 +1,6 @@
 import React from 'react';
 import io from 'socket.io-client';
+import axios from 'axios'
 import './App.css';
 
 function App() {
@@ -31,14 +32,22 @@ function App() {
 		});
 	};
 
+	const testServer = e => {
+		e.preventDefault();
+		console.log(socketLink);
+		axios.get(socketLink)
+			.then(console.log)
+			.catch(console.error)
+	};
+
 	const connectSocket = (e) => {
 		e.preventDefault();
 		console.log(socketLink);
 		try {
-			const socket = io.connect(socketLink)
+			const socket = io.connect(socketLink);
 			setSocket(socket);
 		} catch (e) {
-			console.error(e)
+			console.error(e);
 		}
 	};
 
@@ -86,7 +95,10 @@ function App() {
 					value={socketLink}
 					onChange={(e) => setSocketLink(e.target.value)}
 				/>
-				<button onClick={connectSocket}>Connect to server via socket</button>
+				<div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+					<button onClick={testServer}>Test the server's "GET /"</button>
+					<button onClick={connectSocket}>Connect to server via socket</button>
+				</div>
 			</form>
 
 			<form className="data">
