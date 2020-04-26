@@ -9,6 +9,7 @@ function App() {
 
 	React.useEffect(() => {
 		if (socket) {
+			console.log(socket);
 			console.log('Socket connected!');
 
 			const onevent = socket.onevent;
@@ -33,7 +34,12 @@ function App() {
 	const connectSocket = (e) => {
 		e.preventDefault();
 		console.log(socketLink);
-		setSocket(io.connect(socketLink));
+		try {
+			const socket = io.connect(socketLink)
+			setSocket(socket);
+		} catch (e) {
+			console.error(e)
+		}
 	};
 
 	const sendSocket = (e) => {
