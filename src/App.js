@@ -5,7 +5,7 @@ import './App.css';
 
 function App() {
 	const [form, setForm] = React.useState({ message: '', data: '' });
-	const [socketLink, setSocketLink] = React.useState('localhost:5000');
+	const [socketLink, setSocketLink] = React.useState('http://localhost:5000');
 	const [socket, setSocket] = React.useState(null);
 
 	React.useEffect(() => {
@@ -44,7 +44,7 @@ function App() {
 		e.preventDefault();
 		console.log(socketLink);
 		try {
-			const socket = io.connect(socketLink);
+			const socket = io.connect(socketLink, {withCredentials: false});
 			setSocket(socket);
 		} catch (e) {
 			console.error(e);
