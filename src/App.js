@@ -57,8 +57,10 @@ function App() {
 			console.error("There's no socket connected!");
 		} else {
 			try {
-				const data = JSON.parse(form.data);
-				socket.emit(form.message, data);
+				if (form.data.length) {
+					const data = JSON.parse(form.data);
+					socket.emit(form.message, data);
+				} else socket.emit(form.message);
 			} catch (e) {
 				console.error(e);
 			}
