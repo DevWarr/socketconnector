@@ -1,12 +1,14 @@
 import React from 'react';
 import io from 'socket.io-client';
-import axios from 'axios'
+import axios from 'axios';
 import './App.css';
 
 function App() {
 	const [form, setForm] = React.useState({ message: '', data: '' });
 	const [socketLink, setSocketLink] = React.useState('http://localhost:5000');
 	const [socket, setSocket] = React.useState(null);
+
+	const [socketoptions, setSocketOptions] = React.useState(['test', 'init', 'debug/reset', 'move']);
 
 	React.useEffect(() => {
 		if (socket) {
@@ -32,19 +34,26 @@ function App() {
 		});
 	};
 
-	const testServer = e => {
+	const testServer = (e) => {
 		e.preventDefault();
 		console.log(socketLink);
-		axios.get(socketLink)
-			.then(console.log)
-			.catch(console.error)
+		axios.get(socketLink).then(console.log).catch(console.error);
+	};
+
+	const socketOptions = (e) => {
+		e.preventDefault();
+		console.log(socketLink);
+		axios
+			.get(socketLink + '/socketoptions')
+			.then((res) => setSocketOptions(res.data))
+			.catch(console.error);
 	};
 
 	const connectSocket = (e) => {
 		e.preventDefault();
 		console.log(socketLink);
 		try {
-			const socket = io.connect(socketLink, {withCredentials: false});
+			const socket = io.connect(socketLink, { withCredentials: false });
 			setSocket(socket);
 		} catch (e) {
 			console.error(e);
@@ -98,17 +107,31 @@ function App() {
 					onChange={(e) => setSocketLink(e.target.value)}
 				/>
 				<div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-					<button onClick={testServer}>Test the server's "GET /"</button>
+					<div class="http">
+						<button onClick={testServer}>Test the server's "GET /"</button>
+						<button onClick={socketOptions}>Retreive socket options</button>
+					</div>
 					<button onClick={connectSocket}>Connect to server via socket</button>
 				</div>
 			</form>
 
-			<form className="data">
+			<form className="data" onSubmit={sendSocket}>
 				<label htmlFor="message">Message</label>
-				<input id="message" name="message" value={form.message} onChange={changeHandler} />
+				<input
+					id="message"
+					name="message"
+					list="message-options"
+					value={form.message}
+					onChange={changeHandler}
+				/>
+				<datalist id="message-options">
+					{socketoptions.map((opt, i) => (
+						<option key={i}>{opt}</option>
+					))}
+				</datalist>
 				<label htmlFor="data">Data</label>
 				<textarea id="data" name="data" value={form.data} onChange={changeHandler} />
-				<button onClick={sendSocket}>Send Data</button>
+				<button type="submit">Send Data</button>
 			</form>
 		</div>
 	);

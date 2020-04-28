@@ -56,7 +56,9 @@ label {
 }
 
 button {
+  margin-bottom: 0.2rem;
   width: 15rem;
+  height: 2rem;
   background-color: #282c34;
   font-weight: bold;
   color: white;
